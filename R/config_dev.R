@@ -1,7 +1,7 @@
 message("using DEV-config")
 
-pacman::p_load(googledrive, googlesheets4, dplyr, tidyr, lubridate, fs, uuid, RPostgres,
-               stringr, yaml, readr, rio, RMySQL, keyring, jsonlite, futile.logger, conflicted)
+pacman::p_load(magrittr, tidyr, dplyr, stringr, readr, lubridate, fs, conflicted,
+               futile.logger, jsonlite, httr, ssh, purrr, RMySQL, keyring, yaml)
 
 source("R/functions.R", encoding = "UTF-8")
 config <- read_yaml("config_dev.yaml")
