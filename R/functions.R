@@ -34,8 +34,7 @@ salsa_git_version <- function(qfn_repo) {
 }
 
 delete_remote_file <- function(file) {
-  full_file_path <- path("/srv/audio/cz_rod", file)
-  command <- sprintf("rm -f '%s'", full_file_path)
+  command <- sprintf("rm -f '%s'", file)
   ssh_exec_wait(gh_sess, command)
-  message(paste("Deleted:", full_file_path))
+  flog.info(sprintf("Deleted: %s", path_file(file)), name = config$log_slug)
 }
