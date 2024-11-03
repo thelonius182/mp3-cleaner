@@ -44,7 +44,7 @@ log_count <- function(tib, cmt) {
 }
 
 delete_mp3s_uzm <- function(uzm_dir) {
-  browser()
+
   flog.info(sprintf("deleting from %s", uzm_dir), name = config$log_slug)
 
   uzm_tib <- dir_ls(uzm_dir, recurse = F, regexp = "\\.mp3$") |> as_tibble() |> rename(mp3_qfn = value)
@@ -58,10 +58,18 @@ delete_mp3s_uzm <- function(uzm_dir) {
 
   uzm_tib_rmv <- uzm_tib_a |> inner_join(wordpress_replay_dates_cz,
                                          by = join_by(mp3_ts_fmt == wordpress_replay_ts_fmt))
-  log_count(tib = uzm_tib_rmv, cmt = "replay-mp3's found. Trying to delete ...")
 
-  uzm_tib_rmv_result <- uzm_tib_rmv |> mutate(deletion_status = map(mp3_qfn, safe_delete),
-                                              delete_failed = map_lgl(deletion_status, is.null))
-  log_count(tib = uzm_tib_rmv_result |> filter(delete_failed), cmt = "failed")
+  if (nrow(uzm_tib_rmv) == 0) {
+
+    log_count(tib = uzm_tib_rmv, cmt = "replay-mp3's found.")
+
+  } else {
+
+    log_count(tib = uzm_tib_rmv, cmt = "replay-mp3's found. Trying to delete ...")
+
+    uzm_tib_rmv_result <- uzm_tib_rmv |> mutate(deletion_status = map(mp3_qfn, safe_delete),
+                                                delete_failed = map_lgl(deletion_status, is.null))
+    log_count(tib = uzm_tib_rmv_result |> filter(delete_failed), cmt = "failed")
+  }
 
 }
